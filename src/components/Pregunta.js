@@ -2,45 +2,44 @@ import { useState } from "react";
 import Error from "./Error";
 
 const Pregunta = ({ setPresupuesto, setRestante, setQuestion }) => {
-  const [cantidad, setCantidad] = useState(0);
+  const [ cantidad, setCantidad ] = useState(0); 
+  const [ error, setError ] = useState(false);  
 
-  const [error, setError] = useState(false);
-
-  const definirPresupuesto = (e) => {
+  const definirPresupuesto = e => {
     setCantidad(parseInt(e.target.value));
-  };
+  }
 
-  const agregarPresupuesto = (e) => {
+  const addBudget = e => {
     e.preventDefault();
 
     // Validation
-    if (cantidad < 1 || isNaN(cantidad)) {
-        setError(true);
-        return;
+    if( cantidad < 1 || isNaN(cantidad) ) {
+      setError(true);
+      return;
     }
     setError(false);
-
-    // Send to App
+    // Send to main component for certain actions
     setPresupuesto(cantidad);
     setRestante(cantidad);
     setQuestion(false);
-  };
+  }
+  
   return (
     <>
-      <h2>Put your budget</h2>
-      <form onSubmit={agregarPresupuesto}>
+      <form
+        onSubmit={ addBudget }
+      >
+        <h2>Put your expense</h2>
         <input
           type="number"
-          placeholder="Write your budget"
           className="u-full-width"
-          onChange={definirPresupuesto}
+          placeholder="Write your budget"
+          onChange={ definirPresupuesto }
         />
-        {
-            error ? <Error message="Budget required" />: null
-        }
+        { error ? <Error message="Budget required or budget not valid" /> : null }
         <input
           type="submit"
-          className="button-primary u-full-width"
+          className="u-full-width button-primary"
           value="Send budget"
         />
       </form>
