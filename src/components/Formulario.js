@@ -2,7 +2,7 @@ import { useState } from "react";
 import Error from "./Error";
 import shortid from 'shortid';
 
-const Formulario = () => {
+const Formulario = ({ saveExpense, guardarCrearGasto }) => {
   const [ name, setName ] = useState('');
   const [ quantity, setQuantity ] = useState(0);
   const [ error, setError ] = useState(false);
@@ -24,45 +24,51 @@ const Formulario = () => {
           id: shortid(),
       } 
 
-      console.log(expense); 
-
       // Send expense to main component
-      
+      saveExpense(expense);
+
       // Reset form
+      setName('');
+      setQuantity(0);
+
+      // Para validar si ya hay gastos o no
+      // en el useEffect
+      guardarCrearGasto(true);
   }
 
   return (
     <form
      onSubmit={ addExpense }
     >
-      <h2>Add your expenses here</h2>
+      <h2>Add your expense</h2>
       <div className="campo">
+      
         <label>Expense name</label>
         <input
-         type="text"
-         className="u-full-width" 
-         placeholder="Ex. Lunch"
-         value={name}
-         onChange={ e => setName(e.target.value)}
+          type="text"
+          className="u-full-width"
+          placeholder="Ex. Lunch"
+          value={ name }
+          onChange={ e => setName(e.target.value) }
         />
-      </div>
 
-      <div className="campo">
         <label>Expense quantity</label>
         <input
-         type="number"
-         className="u-full-width" 
-         placeholder="Ex. 300" 
-         value={quantity}
-         onChange={ e => setQuantity(parseInt(e.target.value, 10))}
+          type="number"
+          className="u-full-width"
+          placeholder="Ex. 100"
+          value={ quantity }
+          onChange={ e => setQuantity(parseInt(e.target.value, 10)) }
+        />
+
+        { error ? <Error message="Both fields are required" /> : null }
+
+        <input
+          type="submit"
+          className="button-primary u-full-width"
+          value="Send expense"
         />
       </div>
-        { error ? <Error message="Both fields are required" /> : null }
-      <input
-        type="submit"
-        className="u-full-width button-primary"
-        value="Send expense"
-      />
     </form>
   );
 };
